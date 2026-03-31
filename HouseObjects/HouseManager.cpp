@@ -154,3 +154,23 @@ void HouseManager::print_houses(std::vector<House> &houses, int start, int max) 
         std::cout << "#" << i + 1 << ": " << houses[i] << std::endl;
     }
 }
+
+void HouseManager::export_data(const std::string &filename) {
+    std::ofstream file(filename);
+
+    // Write the header row so python pandas knows what the columns are
+    file << "price,beds,baths,size_in_acres,house_size,zip_code\n";
+
+    //
+    for (const auto& house : houses) {
+        file << house.get_price() << ","
+             << house.get_beds() << ","
+             << house.get_baths() << ","
+             << house.get_size_in_acres() << ","
+             << house.get_house_size() << ","
+             << house.get_zip_code() << "\n";
+    }
+
+    file.close();
+    std::cout << "Successfully exported clean data for AI training." << std::endl;
+}

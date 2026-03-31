@@ -31,5 +31,7 @@ public:
     void print_title();
     // Method to print house data
     void print_houses(std::vector<House> &houses, int start, int max);
+
+    void export_data(const std::string &filename);
 };
 #endif //M1OEP_HOUSEMANAGER_H

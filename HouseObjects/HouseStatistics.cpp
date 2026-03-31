@@ -91,11 +91,8 @@ void HouseStatistics::print_stat_info() const {
     std::cout << "   Mean Size: " << mean_size << " sqft" << std::endl;
     std::cout << "   Max Size: " << max_size << " sqft" << std::endl;
     std::cout << "Acreage Info:" << std::endl;
-    std::cout << "   Mean Acreage: " << mean_acreage << " acres" << std::endl;
     std::cout << "Mean Acreage: " << std::fixed << std::setprecision(4) << mean_acreage << " acres" << std::endl;
     std::cout << "   Max Acreage: " << max_acreage << " acres" << std::endl;
-    std::cout << "Mean size for a house in the US: " << mean_size << " sqft" << std::endl;
-    std::cout << "Mean acreage for a house in the US: " << mean_acreage << " acres" <<std::endl;
     std::cout << "-----------------------" << std::endl;
     std::cout << "    BROKER INFO    " << std::endl;
     std::cout << "Total number of brokers: " << num_brokers << " brokers" << std::endl;
