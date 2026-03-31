@@ -24,7 +24,7 @@ def train_ai_model():
     df = df.drop(columns=['zip_code'])
 
     # Features based on each house object's values
-    features = ['beds', 'baths', 'size_in_acres', 'house_size']
+    features = ['beds', 'baths', 'size_in_acres', 'house_size', 'zip_code_encoded']
     target = 'price'
 
     # X is a 2D matrix, aka the data itself
@@ -42,9 +42,11 @@ def train_ai_model():
     # Pass our data into the model
     model.fit(X, y)
 
-    # At this point, the model is trained, and we write the data to a special pkl file to store
+    # Write the data to a pickle file to store the model
     jl.dump(model, './data/house_model.pkl')
-    print("'house_model.pkl' has successfully been created")
+    # Store the zip code averages as well
+    jl.dump(zip_code_averages, './data/zip_code_averages.pkl')
+    print("'house_model.pkl' and 'zip_code_averages.pkl' have successfully been created")
 
 if __name__ == "__main__":
     train_ai_model()
