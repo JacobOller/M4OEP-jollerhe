@@ -5,8 +5,8 @@ import os
 def test_ai_model(beds, baths, size_in_acres, house_size, zip_code):
 
     # pickle files
-    model_file = './data/house_model.pkl'
-    zip_codes_file = './data/zip_code_averages.pkl'
+    model_file = '../data/house_model.pkl'
+    zip_codes_file = '../data/zip_code_averages.pkl'
 
     if not os.path.exists(model_file) or not os.path.exists(zip_codes_file):
         print("Missing .pkl files, make sure you ran the training script first.")

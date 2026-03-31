@@ -14,7 +14,9 @@ add_executable(main main.cpp
         Sorting/HeapSort.h
         Sorting/HeapSort.cpp
         Menu/Menu.h
-        Menu/Menu.cpp)
+        Menu/Menu.cpp
+        App.cpp
+        App.h)
 add_executable(test testing.cpp
         HouseObjects/House.h
         HouseObjects/House.cpp

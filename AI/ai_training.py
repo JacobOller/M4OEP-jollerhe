@@ -4,7 +4,7 @@ import joblib as jl
 import os
 
 def train_ai_model():
-    file = './data/clean_house_data.csv'
+    file = '../data/clean_house_data.csv'
 
     if not (os.path.exists(file)):
         print(f"File {file} not found! Run C++ Program First.")
@@ -43,9 +43,9 @@ def train_ai_model():
     model.fit(X, y)
 
     # Write the data to a pickle file to store the model
-    jl.dump(model, './data/house_model.pkl')
+    jl.dump(model, '../data/house_model.pkl')
     # Store the zip code averages as well
-    jl.dump(zip_code_averages, './data/zip_code_averages.pkl')
+    jl.dump(zip_code_averages, '../data/zip_code_averages.pkl')
     print("'house_model.pkl' and 'zip_code_averages.pkl' have successfully been created")
 
 if __name__ == "__main__":
