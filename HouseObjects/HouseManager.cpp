@@ -4,7 +4,7 @@
 
 #include "./HouseManager.h"
 
-#include <algorithm>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -17,7 +17,7 @@ const double MAX_ACREAGE = 5.0;
 const int MIN_ACREAGE = .01;
 
 HouseManager::HouseManager() {
-    invalid_count = 0; // Ensure this starts at zero!
+    invalid_count = 0;
     }
 
 bool HouseManager::data_from_file(std::string file_name) {
@@ -50,7 +50,6 @@ bool HouseManager::data_from_file(std::string file_name) {
             std::string status = rowData[1];
 
             // Integers with validation (Check empty, then convert)
-            // Note: Using stod->int cast to handle "1000.0" safely
             int price = (rowData[2].empty()) ? -1 : (int)std::stod(rowData[2]);
             int beds  = (rowData[3].empty()) ? -1 : (int)std::stod(rowData[3]);
             int baths = (rowData[4].empty()) ? -1 : (int)std::stod(rowData[4]);
@@ -106,7 +105,6 @@ std::vector<House> &HouseManager::get_houses_vector() {
     return houses;
 }
 std::vector<House> HouseManager::get_houses_in_budget(int lower, int upper) {
-
     for (int i = 0; i < houses.size(); i++) {
         if (houses[i].get_price() >= lower && houses[i].get_price() <= upper) {
             houses_in_budget.push_back(houses[i]);
@@ -124,7 +122,6 @@ std::vector<House> HouseManager::get_houses_in_city(std::string city, std::strin
     }
     return houses_in_city;
 }
-
 const long HouseManager::get_invalid_count() {
     return invalid_count;
 }
@@ -161,7 +158,6 @@ void HouseManager::export_data(const std::string &filename) {
     // Write the header row so python pandas knows what the columns are
     file << "price,beds,baths,size_in_acres,house_size,zip_code\n";
 
-    //
     for (const auto& house : houses) {
         file << house.get_price() << ","
              << house.get_beds() << ","
@@ -170,7 +166,6 @@ void HouseManager::export_data(const std::string &filename) {
              << house.get_house_size() << ","
              << house.get_zip_code() << "\n";
     }
-
     file.close();
     std::cout << "Successfully exported clean data for AI training." << std::endl;
 }

@@ -5,10 +5,8 @@
 #ifndef M1OEP_House_H
 #define M1OEP_House_H
 
-#include <fstream>
 #include <string>
-#include <vector>
-
+#include <iosfwd>
 
 class House {
 private:
