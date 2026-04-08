@@ -29,6 +29,7 @@ void App::run() {
     stats.calculate_mean_values(hm);
     stats.calculate_max_values(hm);
     stats.calculate_broker_values(hm);
+    stats.get_num_zipcodes(hm.get_houses_vector());
 
     // Export the cleaned data for AI predictions
     hm.export_data("./data/clean_house_data.csv");

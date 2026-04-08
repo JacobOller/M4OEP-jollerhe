@@ -8,6 +8,8 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <bits/locale_facets_nonio.h>
 
 HouseStatistics::HouseStatistics() {
@@ -79,6 +81,39 @@ int HouseStatistics::get_mean_broker_values() const {
 }
 int HouseStatistics::get_max_broker_value() const {
     return max_broker_value;
+}
+int HouseStatistics::get_valid_zipcodes(const std::vector<House> &houses) const {
+    // Create an unordered set, because you can only insert unique elements into the set,
+    // meaning that inserting a duplicate does not work.
+    std::unordered_map<std::string, int> seen_zipcodes;
+    for (const auto &house : houses) {
+        seen_zipcodes[house.get_zip_code()]++;
+    }
+
+    int valid_zipcodes_12 = 0;
+    int valid_zipcodes_15 = 0;
+    int valid_zipcodes_20 = 0;
+    int valid_zipcodes_30 = 0;
+    int valid_zipcodes_50 = 0;
+
+    for (auto const& [key, value] : seen_zipcodes) {
+        if (value >= 12)
+            valid_zipcodes_12++;
+        if (value >= 15)
+            valid_zipcodes_15++;
+        if (value >= 20)
+            valid_zipcodes_20++;
+        if (value >= 30)
+            valid_zipcodes_30++;
+        if (value >= 50)
+            valid_zipcodes_50++;
+    }
+    std::cout << "12: " << valid_zipcodes_12 << std::endl;
+    std::cout << "15: " << valid_zipcodes_15 << std::endl;
+    std::cout << "20: " << valid_zipcodes_20 << std::endl;
+    std::cout << "30: " << valid_zipcodes_30 << std::endl;
+    std::cout << "50: " << valid_zipcodes_50 << std::endl;
+    return valid_zipcodes_12;
 }
 
 void HouseStatistics::print_stat_info() const {

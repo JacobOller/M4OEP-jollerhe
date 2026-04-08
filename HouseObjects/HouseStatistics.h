@@ -50,6 +50,11 @@ public:
     int get_num_brokers() const;
     int get_mean_broker_values() const;
     int get_max_broker_value() const;
+    // Getter for valid zipcodes. A zipcode is valid if it appears at least as many times as the threshold.
+    // This is important because if a zipcode shows up less than the threshold, then it will not be good for training AI.
+    // For example, if a zipcode only has 2 house objects, these could be complete outliers for that given zip code.
+    // A threshold in this context is similar to a minimum sample size (usually 30) in statistics is used to prevent variance.
+    int get_valid_zipcodes(const std::vector<House> &houses, int threshold) const;
 
     /**
      * Method to print stats info to the console.
