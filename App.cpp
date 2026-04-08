@@ -29,11 +29,12 @@ void App::run() {
     stats.calculate_mean_values(hm);
     stats.calculate_max_values(hm);
     stats.calculate_broker_values(hm);
-    stats.get_num_zipcodes(hm.get_houses_vector());
+    int threshold = 20;
+    stats.calculate_valid_zipcodes(hm.get_houses_vector(), threshold);
 
     // Export the cleaned data for AI predictions
     hm.export_data("./data/clean_house_data.csv");
 
-    // Launch the interactive menu
+    // Launch the user menu (console)
     menu.print_menu(stats, hm);
 }
