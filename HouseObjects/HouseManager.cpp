@@ -154,18 +154,37 @@ void HouseManager::print_houses(std::vector<House> &houses, int start, int max) 
 
 void HouseManager::export_data(const std::string &filename) {
     std::ofstream file(filename);
+    // Open the json array
+    file << "[\n";
 
-    // Write the header row so python pandas knows what the columns are
-    file << "price,beds,baths,size_in_acres,house_size,zip_code\n";
+    for (unsigned long i = 0; i < houses.size(); ++i) {
 
-    for (const auto& house : houses) {
-        file << house.get_price() << ","
-             << house.get_beds() << ","
-             << house.get_baths() << ","
-             << house.get_size_in_acres() << ","
-             << house.get_house_size() << ","
-             << house.get_zip_code() << "\n";
+        // Open the json object
+        file << "  {\n";
+
+        // Write the key and value pairs
+        file << "    \"price\": " << houses[i].get_price() << ",\n";
+        file << "    \"beds\": " << houses[i].get_beds() << ",\n";
+        file << "    \"baths\": " << houses[i].get_baths() << ",\n";
+        file << "    \"size_in_acres\": " << houses[i].get_size_in_acres() << ",\n";
+        file << "    \"house_size\": " << houses[i].get_house_size() << ",\n";
+
+        // Use quotes for zip code because as an int it will lose the 0.
+        file << "    \"zip_code\": \"" << houses[i].get_zip_code() << "\"\n";
+
+        // Close the json object
+        file << "  }";
+
+        // 3. Add a comma only if it is not the last item in the list
+        if (i != houses.size() - 1) {
+            file << ",";
+        }
+        file << "\n";
     }
+
+    // Close the json array
+    file << "]\n";
+
     file.close();
-    std::cout << "Successfully exported clean data for AI training." << std::endl;
+    std::cout << "Successfully exported clean json data." << std::endl;
 }

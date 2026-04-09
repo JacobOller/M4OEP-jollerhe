@@ -99,6 +99,31 @@ int HouseStatistics::calculate_valid_zipcodes(const std::vector<House> &houses, 
     }
     return valid_zipcodes;
 }
+void HouseStatistics::calculate_city_values(const std::vector<House> &houses) {
+    // Maps each city and state pair to a total price and number of occurrences pair
+    // Map format: <(city, state), (total price, occurrences)>
+    std::map<std::pair<std::string, std::string>, std::pair<double, int>> cities;
+    for (const auto& house : houses) {
+        std::pair key = std::make_pair(house.get_city(), house.get_state());
+        // Use .first and .second, which access the first/second elements of the (total price, occurrences) pair
+        cities[key].first += house.get_price();
+        cities[key].second++;
+    }
+    // Calculate the mean average for each key (city). Cities[key].first becomes the mean average price for that key (city)
+    for (auto& [key, value] : cities) {
+        value.first = value.first / value.second;
+    }
+    city_values = cities;
+}
+int HouseStatistics::get_num_houses_in_city(const std::string& city, const std::string& state) const {
+    std::pair<std::string, std::string> key = std::make_pair(city, state);
+    auto iter = city_values.find(key);
+    // If the value points to end, then that means it didn't find the city.
+    if (iter != city_values.end()) {
+        return iter->second.second;
+    }
+    return 0;
+}
 
 void HouseStatistics::print_stat_info() const {
     std::cout << "-----------------------" << std::endl;
@@ -118,6 +143,7 @@ void HouseStatistics::print_stat_info() const {
     std::cout << "Mean for the amount of listings per broker: " << mean_broker_values << " listings" << std::endl;
     std::cout << "Max amount of listings by one broker: " << max_broker_value << " from the Broker with the ID: " << max_broker_id << std::endl;
     std::cout << "-----------------------" << std::endl;
-    std::cout << "   ZIPCODE INFO   " << std::endl;
+    std::cout << "   LOCATION INFO   " << std::endl;
     std::cout << "Number of unique zipcodes above the threshold: " << valid_zipcodes << std::endl;
+    std::cout << "Number of houses in NORTON: " << get_num_houses_in_city("Norton", "Massachusetts");
 }

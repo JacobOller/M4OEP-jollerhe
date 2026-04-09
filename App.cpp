@@ -31,9 +31,10 @@ void App::run() {
     stats.calculate_broker_values(hm);
     int threshold = 20;
     stats.calculate_valid_zipcodes(hm.get_houses_vector(), threshold);
+    stats.calculate_city_values(hm.get_houses_vector());
 
     // Export the cleaned data for AI predictions
-    hm.export_data("./data/clean_house_data.csv");
+    hm.export_data("./data/clean_house_data.json");
 
     // Launch the user menu (console)
     menu.print_menu(stats, hm);
