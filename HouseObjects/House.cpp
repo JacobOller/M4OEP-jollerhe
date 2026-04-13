@@ -77,40 +77,40 @@ std::string House::get_prev_sold_date() const {
 }
 
 void House::set_brokered_by(std::string brokered_by) {
-    brokered_by = brokered_by;
+    this->brokered_by = brokered_by;
 }
 void House::set_status(std::string status) {
-    status = status;
+    this->status = status;
 }
 void House::set_price(int price) {
-    price = price;
+    this->price = price;
 }
 void House::set_beds(int beds) {
-    beds = beds;
+    this->beds = beds;
 }
 void House::set_baths(int baths) {
-    baths = baths;
+    this->baths = baths;
 }
 void House::set_size_in_acres(double size_in_acres) {
-    size_in_acres = size_in_acres;
+    this->size_in_acres = size_in_acres;
 }
 void House::set_street_id(std::string street_id) {
-    street_id = street_id;
+    this->street_id = street_id;
 }
 void House::set_city(std::string city) {
-    city = city;
+    this->city = city;
 }
 void House::set_state(std::string state) {
-    state = state;
+    this->state = state;
 }
 void House::set_zip_code(std::string zip_code) {
-    zip_code = zip_code;
+    this->zip_code = zip_code;
 }
 void House::set_house_size(int house_size) {
-    house_size = house_size;
+    this->house_size = house_size;
 }
 void House::set_prev_sold_date(std::string prev_sold_date) {
-    prev_sold_date = prev_sold_date;
+    this->prev_sold_date = prev_sold_date;
 }
 
 // Printing out the important info:

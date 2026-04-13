@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake: configure (m4oep-local)",
+      "type": "shell",
+      "command": "C:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+      "args": ["--preset", "m4oep-local"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "group": "none"
+    },
+    {
+      "label": "CMake: build Debug",
+      "type": "shell",
+      "command": "C:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+      "args": ["--build", "build", "--config", "Debug"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": ["$msCompile"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "CMake: build Release",
+      "type": "shell",
+      "command": "C:/Program Files/Microsoft Visual Studio/18/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+      "args": ["--build", "build", "--config", "Release"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": ["$msCompile"],
+      "group": "build"
+    },
+    {
+      "label": "Run main (build + run)",
+      "dependsOn": ["CMake: build Debug"],
+      "dependsOrder": "sequence",
+      "type": "process",
+      "command": "${workspaceFolder}/build/Debug/main.exe",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "Run test (build + run)",
+      "dependsOn": ["CMake: build Debug"],
+      "dependsOrder": "sequence",
+      "type": "process",
+      "command": "${workspaceFolder}/build/Debug/test.exe",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "Run main (Release — faster load/sort)",
+      "dependsOn": ["CMake: build Release"],
+      "dependsOrder": "sequence",
+      "type": "process",
+      "command": "${workspaceFolder}/build/Release/main.exe",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    }
+  ]
+}

@@ -10,7 +10,6 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <bits/locale_facets_nonio.h>
 
 HouseStatistics::HouseStatistics() {
     mean_price = 0;
@@ -18,6 +17,11 @@ HouseStatistics::HouseStatistics() {
     mean_acreage = 0.0;
 }
 void HouseStatistics::calculate_mean_values(HouseManager &house_manager) {
+    if (house_manager.get_num_of_houses() == 0) {
+        mean_price = mean_size = 0;
+        mean_acreage = 0.0;
+        return;
+    }
     long long total_prices = 0;
     long long total_sizes = 0;
     double total_acreages = 0;
@@ -60,6 +64,11 @@ void HouseStatistics::calculate_broker_values(HouseManager &house_manager) {
             max_broker_value = value;
             max_broker_id = id;
         }
+    }
+    if (broker_occurrences.empty()) {
+        mean_broker_values = 0;
+        num_brokers = 0;
+        return;
     }
     mean_broker_values = total_broker_values / broker_occurrences.size();
     num_brokers = broker_occurrences.size();

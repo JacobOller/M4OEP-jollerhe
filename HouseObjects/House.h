@@ -52,6 +52,7 @@ public:
     void set_house_size(int house_size);
     void set_prev_sold_date(std::string prev_sold_date);
 
+    // Overloaded Operators
     friend std::ostream &operator<<(std::ostream &outs, const House &s);
     friend bool operator < (const House &l_house, const House &r_house);
     friend bool operator > (const House &l_house, const House &r_house);

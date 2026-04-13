@@ -1,3 +1,35 @@
-cmake-build-debug/
+# CMake / build trees (never commit)
+build/
+cmake-build-*/
+out/
+# Local Qt path (copy from CMakeUserPresets.example.json)
+CMakeUserPresets.json
+
+# Visual Studio / MSBuild (multi-config CMake → .sln under build/; .vs is extra)
+.vs/
+*.user
+*.userosscache
+
+# JetBrains
 .idea/
+
+# Python (AI/)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Large / sensitive local data (keep path without trailing slash — it is a file)
 data/realtor_data.csv
+
+# Optional: personal scratch (delete this line if you want notes.md tracked)
+notes.md
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Data Files
+data/clean_house_data.json
+data/zip_code_averages.pkl
+data/house_model.pkl

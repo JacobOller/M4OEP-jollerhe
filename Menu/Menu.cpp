@@ -4,6 +4,7 @@
 
 #include "../Menu/Menu.h"
 #include <iostream>
+#include <limits>
 #include <thread>
 
 void Menu::print_menu(HouseStatistics &stats, HouseManager &house_manager) {
@@ -24,8 +25,9 @@ void Menu::choose_option(HouseStatistics &stats, HouseManager &house_manager) {
 
         // Check if user input is valid
         if (!(std::cin >> user_option)) {
-            std::cout << "\nInvalid Input. Please Enter a Number (1-3)." << std::endl;
+            std::cout << "\nInvalid Input. Please Enter a Number (1-4)." << std::endl;
             std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
         switch (user_option) {
@@ -54,6 +56,7 @@ void Menu::choose_option(HouseStatistics &stats, HouseManager &house_manager) {
                     if (!(budget_min) || budget_min < 50000 || budget_min > 20000000) {
                         std::cout << "Please enter a valid integer in the range 50,000 < n < 20,000,000" << std::endl;
                         std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         continue;
                     }
                     std::cout << "Enter your maximum value here: ";
@@ -61,6 +64,7 @@ void Menu::choose_option(HouseStatistics &stats, HouseManager &house_manager) {
                     if (!(budget_max) || budget_max < 50000 || budget_max > 20000000 || budget_max < budget_min) {
                         std::cout << "Please enter a valid integer in the range 49,999 < n < 20,000,001" << std::endl;
                         std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         continue;
                     }
                     break;
@@ -69,11 +73,9 @@ void Menu::choose_option(HouseStatistics &stats, HouseManager &house_manager) {
                 int start = 0;
                 int max = 10;
                 std::cout << "Now Printing the First 10 Houses in your Budget!" << std::endl << std::endl;
+                house_manager.calculate_houses_in_budget(budget_min, budget_max);
+                std::vector<House> houses_in_budget = house_manager.get_houses_in_budget();
                 while (true) {
-                    start += 10;
-                    // Call House Manager search by budget method to create vector
-                    std::vector<House> houses_in_budget = house_manager.get_houses_in_budget(budget_min, budget_max);
-                    // Call House Manager print houses method
                     house_manager.print_houses(houses_in_budget, start, max);
 
                     std::cout << std::endl << "Would you Like to Print the Next 10 Houses in your Budget? (If they Exist)" << std::endl;
@@ -96,6 +98,7 @@ void Menu::choose_option(HouseStatistics &stats, HouseManager &house_manager) {
                     break;
                 }
                 print_menu(stats, house_manager);
+                break;
             }
             case 3: {
                 // 1. Clear the newline left over from choosing '3' in the menu
@@ -141,10 +144,9 @@ void Menu::choose_option(HouseStatistics &stats, HouseManager &house_manager) {
                 int start = 0;
                 int max = 10;
                 std::cout << "Now Printing the First 10 Houses from your city!" << std::endl << std::endl;
-                // Call HouseManager search by city method to create vector
-                std::vector<House> houses_in_city = house_manager.get_houses_in_city(city, state);
+                house_manager.calculate_houses_in_city(city, state);
+                std::vector<House> houses_in_city = house_manager.get_houses_in_city();
                 while (true) {
-                    // Call House Manager print houses method
                     house_manager.print_houses(houses_in_city, start, max);
 
                     std::cout << std::endl << "Would you Like to Print the Next 10 Houses in the city provided? (If they Exist)" << std::endl;
@@ -167,6 +169,7 @@ void Menu::choose_option(HouseStatistics &stats, HouseManager &house_manager) {
                     break;
                 }
                 print_menu(stats, house_manager);
+                break;
             }
             case 4:
                 // Exit Program

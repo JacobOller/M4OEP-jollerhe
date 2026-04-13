@@ -41,6 +41,9 @@ void HeapSort::percolateDown(std::vector<House> &items, int i, unsigned long& n,
 
 std::vector<House> HeapSort::heapSort(std::vector<House> &items, unsigned long& reads, unsigned long& allocations) {
     reads = allocations = 0;
+    if (items.empty()) {
+        return items;
+    }
     int i, child; // This allocates 2 * sizeof(int)
     allocations += 2 * sizeof(int);
     House temp, tmp; // This allocates 2 * sizeof(House)

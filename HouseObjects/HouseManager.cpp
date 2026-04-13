@@ -4,6 +4,7 @@
 
 #include "./HouseManager.h"
 
+#include <cctype>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -16,9 +17,58 @@ const int MIN_SIZE = 500;
 const double MAX_ACREAGE = 5.0;
 const int MIN_ACREAGE = .01;
 
+// Note: Gemini helped me with the following 3 functions, as it related to
+//  Qt's string validation which was tricky. I tried to implement this entirely on my own,
+// but Gemini gave me a lot of optimal solutions that I have never thought of before.
+// Note: the follpowing functions are static because they are only used within this file,
+// and don't use any private variables from the HouseManager class.
+
+// Helper for parse_optional_int function and filter_by_location function
+static std::string trim_copy(const std::string &s) {
+    const int start = s.find_first_not_of(" \t\r\n");
+    if (start == std::string::npos) {
+        return "";
+    }
+    const int end = s.find_last_not_of(" \t\r\n");
+    return s.substr(start, end - start + 1);
+}
+// Helper for parse_optional_int function
+static bool iequals(const std::string &first, const std::string &second) {
+    if (first.size() != second.size()) {
+        return false;
+    }
+    for (int i = 0; i < first.size(); ++i) {
+        char first_c = first[i];
+        char second_c = second[i];
+        if (std::tolower(first_c) != std::tolower(second_c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+static bool parse_optional_int(const std::string &raw, int &value, bool &specified) {
+    const std::string trimmed = trim_copy(raw);
+    if (trimmed.empty()) {
+        specified = false;
+        return true;
+    }
+    try {
+        std::size_t pos = 0;
+        value = std::stoi(trimmed, &pos);
+        if (pos != trimmed.size()) {
+            return false;
+        }
+        specified = true;
+        return true;
+    } catch (const std::exception &) {
+        return false;
+    }
+}
+
 HouseManager::HouseManager() {
     invalid_count = 0;
-    }
+}
 
 bool HouseManager::data_from_file(std::string file_name) {
     std::ifstream fileIn(file_name);
@@ -101,18 +151,16 @@ bool HouseManager::data_from_file(std::string file_name) {
     fileIn.close();
     return true;
 }
-std::vector<House> &HouseManager::get_houses_vector() {
-    return houses;
-}
-std::vector<House> HouseManager::get_houses_in_budget(int lower, int upper) {
+void HouseManager::calculate_houses_in_budget(int lower, int upper) {
+    houses_in_budget.clear();
     for (int i = 0; i < houses.size(); i++) {
         if (houses[i].get_price() >= lower && houses[i].get_price() <= upper) {
             houses_in_budget.push_back(houses[i]);
         }
     }
-    return houses_in_budget;
 }
-std::vector<House> HouseManager::get_houses_in_city(std::string city, std::string state) {
+void HouseManager::calculate_houses_in_city(std::string city, std::string state) {
+    houses_in_city.clear();
     // std::transform(city.begin(), city.end(), city.begin(),::toupper);
     // std::transform(state.begin(), state.end(), state.begin(),::toupper);
     for (int i = 0; i < houses.size(); i++) {
@@ -120,7 +168,86 @@ std::vector<House> HouseManager::get_houses_in_city(std::string city, std::strin
             houses_in_city.push_back(houses[i]);
         }
     }
-    return houses_in_city;
+}
+
+bool HouseManager::filter_by_location(const std::string &zip, const std::string &city,
+                                        const std::string &state) {
+    houses_by_location.clear();
+    std::string z = trim_copy(zip);
+    std::string c = trim_copy(city);
+    std::string st = trim_copy(state);
+    if (z.empty() && c.empty() && st.empty()) {
+        return false;
+    }
+    for (int i = 0; i < houses.size(); i++) {
+        House &h = houses[i];
+        if (!z.empty() && h.get_zip_code() != z) {
+            continue;
+        }
+        if (!c.empty() && !iequals(h.get_city(), c)) {
+            continue;
+        }
+        if (!st.empty() && !iequals(h.get_state(), st)) {
+            continue;
+        }
+        houses_by_location.push_back(h);
+    }
+    return true;
+}
+
+// Note: Gemini gave me the idea to use parse_optional_int for the search function, as it was a lot easier to implement than my own solution.
+bool HouseManager::filter_by_search(const std::string &zip, const std::string &city, const std::string &state,
+            const std::string &bedsStr, const std::string &bathsStr,
+            const std::string &sqftStr) {
+    houses_search.clear();
+    const std::string z = trim_copy(zip);
+    const std::string c = trim_copy(city);
+    const std::string st = trim_copy(state);
+    int beds_value = 0;
+    int baths_value = 0;
+    int sqft_value = 0;
+    bool has_beds = false;
+    bool has_baths = false;
+    bool has_sqft = false;
+    if (!parse_optional_int(bedsStr, beds_value, has_beds)) {
+        return false;
+    }
+    if (!parse_optional_int(bathsStr, baths_value, has_baths)) {
+        return false;
+    }
+    if (!parse_optional_int(sqftStr, sqft_value, has_sqft)) {
+        return false;
+    }
+    if (z.empty() && c.empty() && st.empty() && !has_beds && !has_baths && !has_sqft) {
+        return false;
+    }
+    for (int i = 0; i < houses.size(); i++) {
+        House &h = houses[i];
+        if (!z.empty() && h.get_zip_code() != z) {
+            continue;
+        }
+        if (!c.empty() && !iequals(h.get_city(), c)) {
+            continue;
+        }
+        if (!st.empty() && !iequals(h.get_state(), st)) {
+            continue;
+        }
+        if (has_beds && h.get_beds() != beds_value) {
+            continue;
+        }
+        if (has_baths && h.get_baths() != baths_value) {
+            continue;
+        }
+        if (has_sqft && h.get_house_size() != sqft_value) {
+            continue;
+        }
+        houses_search.push_back(h);
+    }
+    return true;
+}
+
+std::vector<House> &HouseManager::get_houses_vector() {
+    return houses;
 }
 const long HouseManager::get_invalid_count() {
     return invalid_count;
@@ -130,6 +257,24 @@ const long HouseManager::get_outlier_count() {
 }
 const long HouseManager::get_num_of_houses() {
     return houses.size();
+}
+const std::vector<House> HouseManager::get_houses_in_budget() {
+    return houses_in_budget;
+}
+const std::vector<House> HouseManager::get_houses_in_city() {
+    return houses_in_city;
+}
+
+const std::vector<House> &HouseManager::get_houses_in_budget_ref() const {
+    return houses_in_budget;
+}
+
+const std::vector<House> &HouseManager::get_houses_by_location_ref() const {
+    return houses_by_location;
+}
+
+const std::vector<House> &HouseManager::get_houses_search_ref() const {
+    return houses_search;
 }
 
 void HouseManager::print_houses(std::vector<House> &houses, int start, int max) {
@@ -168,7 +313,6 @@ void HouseManager::export_data(const std::string &filename) {
         file << "    \"baths\": " << houses[i].get_baths() << ",\n";
         file << "    \"size_in_acres\": " << houses[i].get_size_in_acres() << ",\n";
         file << "    \"house_size\": " << houses[i].get_house_size() << ",\n";
-
         // Use quotes for zip code because as an int it will lose the 0.
         file << "    \"zip_code\": \"" << houses[i].get_zip_code() << "\"\n";
 
@@ -181,7 +325,6 @@ void HouseManager::export_data(const std::string &filename) {
         }
         file << "\n";
     }
-
     // Close the json array
     file << "]\n";
 

@@ -1,1 +1,2 @@
+# Because my dataset csv file is so large, I used Git LFS to store it. (Large File Storage)
 *.csv filter=lfs diff=lfs merge=lfs -text
